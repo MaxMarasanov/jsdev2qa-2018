@@ -10,19 +10,17 @@ var salariesSum = 0;
 
 function task1()
 {
-	for (var amount in salaries) 
-	{ 
-		salariesSum += salaries[amount]
-	}
-	
 	//вывожу тебе объект, чтобы ты видел цифры
 	console.log(salaries);
 	
 	//вывожу тебе сумму или ноль
 	if (Object.keys(salaries).length !== 0) 
 	{
+		for (var amount in salaries) 
+		{ 
+			salariesSum += salaries[amount]
+		}
 		console.log(salariesSum);
-		break;
 	}
 	else 
 	{

@@ -19,6 +19,13 @@ function task1()
 	console.log(salaries);
 	
 	//вывожу тебе сумму или ноль
-	if (Object.keys(salaries).length != 0) console.log(salariesSum);
-	else console.log(0);	
+	if (Object.keys(salaries).length !== 0) 
+	{
+		console.log(salariesSum);
+		break;
+	}
+	else 
+	{
+		console.log(0);
+	}
 }

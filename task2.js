@@ -30,7 +30,7 @@ arrObjects[4] = {
 //условие сортировки - по убыванию количества свойст
 function compareLength(obj1, obj2) 
 {
-	return Object.keys(obj2).length - Object.keys(obj1).length
+	return Object.keys(obj2).length - Object.keys(obj1).length;
 }
 
 //вывожу уже отсортированный массив объектов

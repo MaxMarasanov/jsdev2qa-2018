@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>JS Dev2QA 2018, Task4</title>
+	<link rel="stylesheet" type="text/css" href="./task4.css">
+	<script src="./task4.js"></script>
+</head>
+
+<body>
+	<select id="manufacturer" onchange="populateModels()">
+		<option value="default"></option>
+		<option value="iphone">iPhone</option>
+		<option value="samsung">Samsung</option>
+		<option value="nokia">Nokia</option>
+	</select>
+	<select id="model">
+	</select>
+	<button onclick="validateReport()">Generate report</button><br><br>
+	<div class="result" id="result"></div>
+</body>
+
+</html>

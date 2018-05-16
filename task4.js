@@ -41,63 +41,63 @@ function populateModels() {
 
 function generateReport() {
 
-	//обнуляем текст ошибки перед новой валидацией
+    //обнуляем текст ошибки перед новой валидацией
     var errorMessage = document.getElementsByClassName("result")[0];
     errorMessage.innerHTML = "";
-	
-	//валидируем на наличие новых ошибок
-	validateReport();
-	
-	//если ошибки нет, то строим репорт
-	if (errorMessage.innerHTML === "") {
-		
-		var manufacturerSelectedValue = document.getElementById("manufacturer").value;
-		var modelSelectedValue = document.getElementById("model").value;
-		
-		//перед созданием нового репорта дропаем предыдущий, если он существует
-		if (!!document.getElementById('report')) {
-			document.getElementById('report').remove();
-		}
 
-		//начинаем создавать новый репорт
-		var table = document.createElement('table');
-		table.setAttribute("id", "report");
+    //валидируем на наличие новых ошибок
+    validateReport();
 
-		var row1 = table.insertRow(0);
+    //если ошибки нет, то строим репорт
+    if (errorMessage.innerHTML === "") {
 
-		var cell1 = row1.insertCell(0);
-		cell1.colSpan = 2;
+        var manufacturerSelectedValue = document.getElementById("manufacturer").value;
+        var modelSelectedValue = document.getElementById("model").value;
 
-		var cellText1 = document.createTextNode(manufacturerSelectedValue);
-		cell1.appendChild(cellText1);
+        //перед созданием нового репорта дропаем предыдущий, если он существует
+        if (!!document.getElementById('report')) {
+            document.getElementById('report').remove();
+        }
 
-		//если выбрана конкретная модель, то создаем репорт только для нее
-		if (modelSelectedValue !== "default") {
-			
-			populateReport(table, 1, modelSelectedValue);
+        //начинаем создавать новый репорт
+        var table = document.createElement('table');
+        table.setAttribute("id", "report");
 
-		}
+        var row1 = table.insertRow(0);
 
-		//иначе выводим инфу по всем моделям указанного производителя
-		else {
-	
-			var modelArray = manufacturerSelectedValue + "Models";
-			var finalArray = window[modelArray];
-			finalArray.sort();
-			var rowNumber = 1;
+        var cell1 = row1.insertCell(0);
+        cell1.colSpan = 2;
 
-			for (var i = 0; i < finalArray.length; i++) {
-			
-				populateReport(table, rowNumber, finalArray[i]);
-				rowNumber++;
+        var cellText1 = document.createTextNode(manufacturerSelectedValue);
+        cell1.appendChild(cellText1);
 
-			}	
-		}
+        //если выбрана конкретная модель, то создаем репорт только для нее
+        if (modelSelectedValue !== "default") {
 
-		//всовываем репорт перед блоком с ошибками
-		var div = document.getElementById('result');
-		document.body.insertBefore(table, div);
-	}
+            populateReport(table, 1, modelSelectedValue);
+
+        }
+
+        //иначе выводим инфу по всем моделям указанного производителя
+        else {
+
+            var modelArray = manufacturerSelectedValue + "Models";
+            var finalArray = window[modelArray];
+            finalArray.sort();
+            var rowNumber = 1;
+
+            for (var i = 0; i < finalArray.length; i++) {
+
+                populateReport(table, rowNumber, finalArray[i]);
+                rowNumber++;
+
+            }
+        }
+
+        //всовываем репорт перед блоком с ошибками
+        var div = document.getElementById('result');
+        document.body.insertBefore(table, div);
+    }
 
 }
 
@@ -154,9 +154,8 @@ function validateReport() {
 }
 
 
-function populateReport(table, rowNumber, modelSelectedValue)
-{
-	var row2 = table.insertRow(1);
+function populateReport(table, rowNumber, modelSelectedValue) {
+    var row2 = table.insertRow(1);
 
     var cell2 = row2.insertCell(0);
     var cell3 = row2.insertCell(1);
@@ -168,15 +167,15 @@ function populateReport(table, rowNumber, modelSelectedValue)
 
     //если нечетное кол-во символов - статус доступен
     if (modelSelectedValue.length % 2 !== 0) {
-		cellText3.className = 'available';
-		cellText3.innerHTML = "Available";
+        cellText3.className = 'available';
+        cellText3.innerHTML = "Available";
     }
 
     //если четное кол-во символов - статус недоступен
     else {
         cellText3.className = 'na';
         cellText3.innerHTML = "Not Available";
-        }
+    }
 
     cell3.appendChild(cellText3);
 

@@ -42,17 +42,17 @@ function populateModels() {
 function generateReport() {
 
     //обнуляем текст ошибки перед новой валидацией
-    var displayError = document.getElementsByClassName("result")[0];
-    displayError.innerHTML = "";
-	
-	var manufacturerSelectedValue = document.getElementById("manufacturer").value;
-    var modelSelectedValue = document.getElementById("model").value;
+    var errorMessage = document.getElementsByClassName("result")[0];
+    errorMessage.innerHTML = "";
 
     //валидируем на наличие новых ошибок
-    var errorMessage = validateReport(manufacturerSelectedValue, modelSelectedValue);
+    validateReport();
 
     //если ошибки нет, то строим репорт
-    if (errorMessage === "") {
+    if (errorMessage.innerHTML === "") {
+
+        var manufacturerSelectedValue = document.getElementById("manufacturer").value;
+        var modelSelectedValue = document.getElementById("model").value;
 
         //перед созданием нового репорта дропаем предыдущий, если он существует
         if (!!document.getElementById('report')) {
@@ -74,7 +74,7 @@ function generateReport() {
         //если выбрана конкретная модель, то создаем репорт только для нее
         if (modelSelectedValue !== "default") {
 
-            insertModelAndStatus(table, 1, modelSelectedValue);
+            populateReport(table, 1, modelSelectedValue);
 
         }
 
@@ -88,7 +88,7 @@ function generateReport() {
 
             for (var i = 0; i < finalArray.length; i++) {
 
-                insertModelAndStatus(table, rowNumber, finalArray[i]);
+                populateReport(table, rowNumber, finalArray[i]);
                 rowNumber++;
 
             }
@@ -98,17 +98,11 @@ function generateReport() {
         var div = document.getElementById('result');
         document.body.insertBefore(table, div);
     }
-	
-	else {
-		var displayError = document.getElementsByClassName("result")[0];
-        displayError.innerHTML = errorMessage;
-	}
 
 }
 
-function validateReport(manufacturerSelectedValue, modelSelectedValue) {
-
-	var errorMessage = "";
+function validateReport() {
+    var manufacturerSelectedValue = document.getElementById("manufacturer").value;
 
     //раз мы сделали попытку создать новый репорт, то тут же уничтожаем старый
     if (!!document.getElementById('report')) {
@@ -116,12 +110,16 @@ function validateReport(manufacturerSelectedValue, modelSelectedValue) {
     }
 
     //если не выбран производитель, то выдаем ошибку, не делаем репорт
-    if (manufacturerSelectedValue === "default") {
-        var errorMessage = "Please select a manufacturer!";
+    if (document.getElementById("manufacturer").value === "default") {
+        var errorMessage = document.getElementsByClassName("result")[0];
+        errorMessage.innerHTML = "Please select a manufacturer!";
     }
 
     //если выбран производитель и он в списке существующих
     else if (manufacturer.indexOf(manufacturerSelectedValue) !== -1) {
+
+        var manufacturerSelectedValue = document.getElementById("manufacturer").value;
+        var modelSelectedValue = document.getElementById("model").value;
 
         //делаем попытку найти модель у заданного производителя
         if (modelSelectedValue !== "default") {
@@ -140,7 +138,8 @@ function validateReport(manufacturerSelectedValue, modelSelectedValue) {
 
             //если модель не нашли - выводим ошибку, не создаем репорт
             if (modelFound === false) {
-                var errorMessage = "Specified model doesn't exist in the selected manufacturer!";
+                var errorMessage = document.getElementsByClassName("result")[0];
+                errorMessage.innerHTML = "Specified model doesn't exist in the selected manufacturer!";
             }
         }
 
@@ -148,15 +147,14 @@ function validateReport(manufacturerSelectedValue, modelSelectedValue) {
 
     //если выбранный производитель вообще не существует - выводим ошибку, не создаем репорт
     else {
-        var errorMessage = "No data found!";
+        var errorMessage = document.getElementsByClassName("result")[0];
+        errorMessage.innerHTML = "No data found!";
     }
-	
-	return errorMessage;
 
 }
 
 
-function insertModelAndStatus(table, rowNumber, modelSelectedValue) {
+function populateReport(table, rowNumber, modelSelectedValue) {
     var row2 = table.insertRow(1);
 
     var cell2 = row2.insertCell(0);

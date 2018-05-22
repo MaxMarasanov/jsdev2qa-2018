@@ -1,10 +1,10 @@
 body {
-    background-color: lightblue;
+	background-color: lightblue;
 }
 
 select {
-    border: none;
-    font: 105% serif;
+	border: none;
+	font: 105% serif;
 }
 
 button {

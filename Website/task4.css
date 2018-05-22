@@ -1,0 +1,36 @@
+body {
+	background-color: lightblue;
+}
+
+select {
+	border: none;
+	font: 105% serif;
+}
+
+button {
+	background-color: lightblue;
+	font: bold 105% serif;
+}
+
+.result {
+	font: bold 105% serif;
+	color: red;
+	text-align: center;
+	width: 245px;
+}
+
+.available {
+	font: bold 105% serif;
+	color: darkgreen;
+}
+
+.na {
+	font: bold 105% serif;
+	color: red;
+}
+
+table, tr, td {
+	border: 1px solid black;
+	border-spacing: 0px;
+	text-align: center;
+}

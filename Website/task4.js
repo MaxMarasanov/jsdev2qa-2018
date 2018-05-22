@@ -74,7 +74,7 @@ function generateReport() {
 		//если выбрана конкретная модель, то создаем репорт только для нее
 		if (modelSelectedValue !== "default") {
 
-			insertModelAndStatus(table, 1, modelSelectedValue);
+			insertModelAndStatus(table, modelSelectedValue);
 
 		}
 
@@ -88,7 +88,7 @@ function generateReport() {
 
 			for (var i = 0; i < finalArray.length; i++) {
 
-				insertModelAndStatus(table, rowNumber, finalArray[i]);
+				insertModelAndStatus(table, finalArray[i]);
 				rowNumber++;
 
 			}
@@ -156,7 +156,7 @@ function validateReport(manufacturerSelectedValue, modelSelectedValue) {
 }
 
 
-function insertModelAndStatus(table, rowNumber, modelSelectedValue) {
+function insertModelAndStatus(table, modelSelectedValue) {
 	var row2 = table.insertRow(1);
 
 	var cell2 = row2.insertCell(0);

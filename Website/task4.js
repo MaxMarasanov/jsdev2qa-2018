@@ -5,103 +5,113 @@ var nokiaModels = ["Nokia 3310", "Nokia Lumia 850", "Nokia X", "Nokia XL"];
 
 //обнуляем значения моделей, чтобы при смене выбора они отображались корректно
 function removeModels(selectbox) {
-	if (selectbox.options.length > 0) {
-		selectbox.innerHTML = "";
-	}
+    if (selectbox.options.length > 0) {
+        selectbox.innerHTML = "";
+    }
 }
 
 function populateModels() {
-	removeModels(document.getElementById("model"));
+    removeModels(document.getElementById("model"));
 
-	//получем текущее значение дроп-дауна Manufacturer
-	var manufacturerSelectedValue = document.getElementById("manufacturer").value;
+    //получем текущее значение дроп-дауна Manufacturer
+    var manufacturerSelectedValue = document.getElementById("manufacturer").value;
 
-	if (!!manufacturerSelectedValue && manufacturerSelectedValue !== "default") {
-		//преобразуем новое значение дроп-дауна Manufacturer, чтобы указать на массив
-		var modelArray = manufacturerSelectedValue + "Models";
-		var finalArray = window[modelArray];
+    if (!!manufacturerSelectedValue) {
 
+		var newRequest = new XMLHttpRequest();
+	
+		newRequest.open('POST', 'http://localhost:8080', false);
+		newRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		newRequest.send("manufacturer=" + manufacturerSelectedValue);
+	
+		if (newRequest.status == 200) {
+			var modelArray = newRequest.responseText;
+			var finalArray = JSON.parse(modelArray);
+			
+			if (finalArray.length > 1) {
 
-		//добавляем в модели дефолтное значение - пустое
-		var modelValues = document.getElementById("model");
-		var option = document.createElement("option");
-		option.text = "Please select";
-		option.value = "default";
-		modelValues.add(option);
+				//добавляем в модели дефолтное значение - пустое
+				var modelValues = document.getElementById("model");
+				var option = document.createElement("option");
+				option.text = "Please select";
+				option.value = "default";
+				modelValues.add(option);
 
-		//добавляем в модели нужные значения из массива
-		for (var i = 0; i < finalArray.length; i++) {
-			var option = document.createElement("option");
-			option.text = finalArray[i];
-			option.value = finalArray[i];
-			modelValues.add(option);
+				//добавляем в модели нужные значения из массива
+				for (var i = 0; i < finalArray.length; i++) {
+					var option = document.createElement("option");
+					option.text = finalArray[i];
+					option.value = finalArray[i];
+					modelValues.add(option);
+				}
+			}
 		}
-	}
+    }
 }
 
 function generateReport() {
 
-	//обнуляем текст ошибки перед новой валидацией
-	var displayError = document.getElementsByClassName("result")[0];
-	displayError.innerHTML = "";
-
+    //обнуляем текст ошибки перед новой валидацией
+    var displayError = document.getElementsByClassName("result")[0];
+    displayError.innerHTML = "";
+	
 	var manufacturerSelectedValue = document.getElementById("manufacturer").value;
 	var modelSelectedValue = document.getElementById("model").value;
 
-	//валидируем на наличие новых ошибок
-	var errorMessage = validateReport(manufacturerSelectedValue, modelSelectedValue);
+    //валидируем на наличие новых ошибок
+    var errorMessage = validateReport(manufacturerSelectedValue, modelSelectedValue);
 
-	//если ошибки нет, то строим репорт
-	if (errorMessage === "") {
+    //если ошибки нет, то строим репорт
+    if (errorMessage === "") {
 
-		//перед созданием нового репорта дропаем предыдущий, если он существует
-		if (!!document.getElementById('report')) {
-			document.getElementById('report').remove();
-		}
+        //перед созданием нового репорта дропаем предыдущий, если он существует
+        if (!!document.getElementById('report')) {
+            document.getElementById('report').remove();
+        }
 
-		//начинаем создавать новый репорт
-		var table = document.createElement('table');
-		table.setAttribute("id", "report");
+        //начинаем создавать новый репорт
+        var table = document.createElement('table');
+        table.setAttribute("id", "report");
 
-		var row1 = table.insertRow(0);
+        var row1 = table.insertRow(0);
 
-		var cell1 = row1.insertCell(0);
-		cell1.colSpan = 2;
+        var cell1 = row1.insertCell(0);
+        cell1.colSpan = 2;
 
-		var cellText1 = document.createTextNode(manufacturerSelectedValue);
-		cell1.appendChild(cellText1);
+        var cellText1 = document.createTextNode(manufacturerSelectedValue);
+        cell1.appendChild(cellText1);
 
-		//если выбрана конкретная модель, то создаем репорт только для нее
-		if (modelSelectedValue !== "default") {
+        //если выбрана конкретная модель, то создаем репорт только для нее
+        if (modelSelectedValue !== "default") {
 
-			insertModelAndStatus(table, modelSelectedValue);
+            insertModelAndStatus(table, modelSelectedValue);
 
-		}
+        }
 
-		//иначе выводим инфу по всем моделям указанного производителя
-		else {
+        //иначе выводим инфу по всем моделям указанного производителя
+        else {
 
-			var modelArray = manufacturerSelectedValue + "Models";
-			var finalArray = window[modelArray];
-			finalArray.sort();
-			var rowNumber = 1;
+            var modelArray = manufacturerSelectedValue + "Models";
+            var finalArray = window[modelArray];
+            finalArray.sort();
+            var rowNumber = 1;
 
-			for (var i = 0; i < finalArray.length; i++) {
+            for (var i = 0; i < finalArray.length; i++) {
 
-				insertModelAndStatus(table, finalArray[i]);
-				rowNumber++;
+                insertModelAndStatus(table, finalArray[i]);
+                rowNumber++;
 
-			}
-		}
+            }
+        }
 
-		//всовываем репорт перед блоком с ошибками
-		var div = document.getElementById('result');
-		document.body.insertBefore(table, div);
-	}
+        //всовываем репорт перед блоком с ошибками
+        var div = document.getElementById('result');
+        document.body.insertBefore(table, div);
+    }
 	
 	else {
 		var displayError = document.getElementsByClassName("result")[0];
-		displayError.innerHTML = errorMessage;
+        displayError.innerHTML = errorMessage;
 	}
 
 }
@@ -110,75 +120,75 @@ function validateReport(manufacturerSelectedValue, modelSelectedValue) {
 
 	var errorMessage = "";
 
-	//раз мы сделали попытку создать новый репорт, то тут же уничтожаем старый
+    //раз мы сделали попытку создать новый репорт, то тут же уничтожаем старый
 	if (!!document.getElementById('report')) {
 		document.getElementById('report').remove();
-	}
+    }
 
-	//если не выбран производитель, то выдаем ошибку, не делаем репорт
-	if (manufacturerSelectedValue === "default") {
-		var errorMessage = "Please select a manufacturer!";
-	}
+    //если не выбран производитель, то выдаем ошибку, не делаем репорт
+    if (manufacturerSelectedValue === "default") {
+        var errorMessage = "Please select a manufacturer!";
+    }
 
-	//если выбран производитель и он в списке существующих
-	else if (manufacturer.indexOf(manufacturerSelectedValue) !== -1) {
+    //если выбран производитель и он в списке существующих
+    else if (manufacturer.indexOf(manufacturerSelectedValue) !== -1) {
 
-		//делаем попытку найти модель у заданного производителя
-		if (modelSelectedValue !== "default") {
-			var modelArray = manufacturerSelectedValue + "Models";
-			var finalArray = window[modelArray];
-			var modelFound = false;
+        //делаем попытку найти модель у заданного производителя
+        if (modelSelectedValue !== "default") {
+            var modelArray = manufacturerSelectedValue + "Models";
+            var finalArray = window[modelArray];
+            var modelFound = false;
 
-			for (var i = 0; i < finalArray.length; i++) {
+            for (var i = 0; i < finalArray.length; i++) {
 
-				//если модель нашли - перестаем искать
-				if (finalArray[i] === modelSelectedValue) {
-					modelFound = true;
-					break;
-				}
-			}
+                //если модель нашли - перестаем искать
+                if (finalArray[i] === modelSelectedValue) {
+                    modelFound = true;
+                    break;
+                }
+            }
 
-			//если модель не нашли - выводим ошибку, не создаем репорт
-			if (modelFound === false) {
-				var errorMessage = "Specified model doesn't exist in the selected manufacturer!";
-			}
-		}
+            //если модель не нашли - выводим ошибку, не создаем репорт
+            if (modelFound === false) {
+                var errorMessage = "Specified model doesn't exist in the selected manufacturer!";
+            }
+        }
 
-	}
+    }
 
-	//если выбранный производитель вообще не существует - выводим ошибку, не создаем репорт
-	else {
-		var errorMessage = "No data found!";
-	}
-
+    //если выбранный производитель вообще не существует - выводим ошибку, не создаем репорт
+    else {
+        var errorMessage = "No data found!";
+    }
+	
 	return errorMessage;
 
 }
 
 
 function insertModelAndStatus(table, modelSelectedValue) {
-	var row2 = table.insertRow(1);
+    var row2 = table.insertRow(1);
 
-	var cell2 = row2.insertCell(0);
-	var cell3 = row2.insertCell(1);
+    var cell2 = row2.insertCell(0);
+    var cell3 = row2.insertCell(1);
 
-	var cellText2 = document.createTextNode(modelSelectedValue);
-	cell2.appendChild(cellText2);
+    var cellText2 = document.createTextNode(modelSelectedValue);
+    cell2.appendChild(cellText2);
 
-	var cellText3 = document.createElement('div');
+    var cellText3 = document.createElement('div');
 
-	//если нечетное кол-во символов - статус доступен
-	if (modelSelectedValue.length % 2 !== 0) {
-		cellText3.className = 'available';
-		cellText3.innerHTML = "Available";
-	}
+    //если нечетное кол-во символов - статус доступен
+    if (modelSelectedValue.length % 2 !== 0) {
+        cellText3.className = 'available';
+        cellText3.innerHTML = "Available";
+    }
 
-	//если четное кол-во символов - статус недоступен
-	else {
-		cellText3.className = 'na';
-		cellText3.innerHTML = "Not Available";
-	}
+    //если четное кол-во символов - статус недоступен
+    else {
+        cellText3.className = 'na';
+        cellText3.innerHTML = "Not Available";
+    }
 
-	cell3.appendChild(cellText3);
+    cell3.appendChild(cellText3);
 
 }

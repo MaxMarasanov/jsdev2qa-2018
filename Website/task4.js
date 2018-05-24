@@ -28,7 +28,7 @@ function populateModels() {
 			var modelArray = newRequest.responseText;
 			var finalArray = JSON.parse(modelArray);
 			
-			if (finalArray.length > 1) {
+			if (finalArray.length > 0) {
 
 				//добавляем в модели дефолтное значение - пустое
 				var modelValues = document.getElementById("model");

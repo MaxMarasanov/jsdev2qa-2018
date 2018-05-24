@@ -11,7 +11,7 @@ exports.models = function(manufacturerValue) {
 		jsonModels = JSON.stringify(eval(manufacturerValue));
 	}
 	else {
-		var emptyArray = [""];
+		var emptyArray = [];
 		jsonModels = JSON.stringify(emptyArray);
 	}
 	return jsonModels;
